@@ -21,7 +21,7 @@ func main() {
 	flag.Parse()
 	utils.Clear()
 	fmt.Println(utils.GetExtFiles(utils.GetAbsPath(), ".exe"))
-	q := utils.RunCommand("cmd /c ping 43.138.31.224")
+	q := utils.RunCommand("ping 43.138.31.224")
 	fmt.Println(q)
 	fmt.Printf("Listening and serving HTTP on %s:%d\n", *h, *p)
 	gin.SetMode(gin.ReleaseMode)
