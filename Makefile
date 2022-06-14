@@ -1,4 +1,4 @@
-OS = darwin freebsd linux openbsd
+OS = linux
 ARCHS = 386 arm amd64 arm64
 
 .DEFAULT_GOAL := help
