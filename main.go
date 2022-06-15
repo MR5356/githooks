@@ -35,6 +35,7 @@ func CreateRoute() *gin.Engine {
 }
 
 func main() {
+	// 初始化
 	Init()
 
 	r := CreateRoute()
