@@ -21,6 +21,7 @@ func RunWeb(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	log.Printf("%v", &json)
 	c.JSON(http.StatusOK, 123)
 }
