@@ -77,7 +77,7 @@ func RunScript(scriptName string, args []string) []string {
 	} else {
 		fmt.Printf("%s 不存在", scriptName)
 	}
-	scriptPath = scriptPath + strings.Join(args, " ")
+	scriptPath = scriptPath + " " + strings.Join(args, " ")
 	res := make([]string, 0)
 	enc := mahonia.NewDecoder("gbk")
 
