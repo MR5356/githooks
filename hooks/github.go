@@ -33,3 +33,7 @@ func HandleGithub(c *gin.Context) {
 	go utils.RunScript("docker.sh", []string{githubHookBody.Repository.Name, githubHookBody.Repository.SSHUrl, githubHookBody.HeadCommit.Id[0:6]})
 	c.JSON(http.StatusOK, githubHookBody)
 }
+
+func HandleGithubRunning(c *gin.Context) {
+	c.JSON(http.StatusOK, utils.ScriptTasks)
+}

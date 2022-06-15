@@ -31,6 +31,7 @@ func CreateRoute() *gin.Engine {
 	}
 	r := gin.Default()
 	r.POST("/", hooks.HandleGithub)
+	r.GET("/running", hooks.HandleGithubRunning)
 	return r
 }
 

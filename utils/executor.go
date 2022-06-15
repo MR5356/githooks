@@ -10,11 +10,20 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
-	Script = make(map[string]string, 0)
+	Script      = make(map[string]string, 0)
+	ScriptTasks = make(map[string]ScriptTask, 0)
 )
+
+type ScriptTask struct {
+	Name       string `json:"name"`
+	StartTime  int64  `json:"startTime"`
+	FinishTime int64  `json:"finishTime"`
+	Command    string `json:"command"`
+}
 
 func LoadScripts() {
 	Script = make(map[string]string, 0)
@@ -78,7 +87,9 @@ func RunScript(scriptName string, args []string) []string {
 	} else {
 		fmt.Printf("%s 不存在", scriptName)
 	}
+
 	scriptPath = scriptPath + " " + strings.Join(args, " ")
+
 	res := make([]string, 0)
 	enc := mahonia.NewDecoder("gbk")
 
@@ -87,6 +98,9 @@ func RunScript(scriptName string, args []string) []string {
 	if optSys == "windows" {
 		panic("仅支持在linux中执行脚本")
 	}
+
+	ScriptTasks[args[0]+":"+args[2]] = ScriptTask{args[0], time.Now().Unix(), 0, scriptPath}
+
 	stdout, _ := cmd.StdoutPipe()
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -106,14 +120,16 @@ func RunScript(scriptName string, args []string) []string {
 	err := cmd.Start()
 	wg.Wait()
 	if err != nil {
+		delete(ScriptTasks, args[0]+":"+args[2])
 		fmt.Println(err)
 	}
 
 	//fmt.Println("Process PID: ", cmd.Process.Pid)
 	err = cmd.Wait()
 	if err != nil {
+		delete(ScriptTasks, args[0]+":"+args[2])
 		fmt.Println(err)
 	}
-
+	delete(ScriptTasks, args[0]+":"+args[2])
 	return res
 }
