@@ -124,7 +124,6 @@ func RunScript(scriptName string, args []string) []string {
 		fmt.Println(err)
 	}
 
-	//fmt.Println("Process PID: ", cmd.Process.Pid)
 	err = cmd.Wait()
 	if err != nil {
 		delete(ScriptTasks, args[0]+":"+args[2])
