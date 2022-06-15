@@ -39,6 +39,7 @@ func main() {
 	Init()
 
 	r := CreateRoute()
+
 	err := r.Run(fmt.Sprintf("%s:%d", *host, *port))
 	if err != nil {
 		panic(err)
