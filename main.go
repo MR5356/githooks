@@ -15,7 +15,8 @@ var (
 )
 
 func RunWeb(c *gin.Context) {
-	c.JSON(http.StatusOK, "123")
+	fmt.Println(c.Request.Body)
+	c.JSON(http.StatusOK, 123)
 }
 
 func Init() {

@@ -16,6 +16,7 @@ var (
 )
 
 func LoadScripts() {
+	Script = make(map[string]string, 0)
 	fmt.Println("脚本加载开始...")
 	files := GetExtFiles(GetAbsPath(), ".sh")
 	for _, file := range files {
@@ -66,12 +67,19 @@ func RunCommand(command string) []string {
 	return res
 }
 
-func RunScript(command string) []string {
+func RunScript(scriptName string) []string {
+	LoadScripts()
+	var scriptPath string
+	if script, ok := Script[scriptName]; ok {
+		scriptPath = script
+	} else {
+		fmt.Printf("%s 不存在", scriptName)
+	}
 	res := make([]string, 0)
 	enc := mahonia.NewDecoder("gbk")
 
 	optSys := runtime.GOOS
-	cmd := exec.Command("bash", command)
+	cmd := exec.Command("bash", scriptPath)
 	if optSys == "windows" {
 		panic("仅支持在linux中执行脚本")
 	}
