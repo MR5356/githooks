@@ -23,6 +23,7 @@ func LoadScripts() {
 	for _, file := range files {
 		filename := filepath.Base(file)
 		Script[filename] = file
+		RunCommand(fmt.Sprintf("chmod +x %s", file))
 		fmt.Println(filename + ": " + file)
 	}
 	fmt.Println("脚本加载完毕")
