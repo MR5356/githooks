@@ -26,7 +26,8 @@ func HandleGithub(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(githubHookBody)
+	req, _ := json.Marshal(githubHookBody)
+	fmt.Printf("接收到新的githook：%s", string(req))
 
 	utils.RunScript("docker.sh", []string{githubHookBody.Repository.Name, githubHookBody.Repository.SSHUrl, githubHookBody.HeadCommit.Id[0:6]})
 	c.JSON(http.StatusOK, githubHookBody)
