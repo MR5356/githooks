@@ -6,7 +6,6 @@ import (
 	"githooks/hooks"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 var (
@@ -14,11 +13,6 @@ var (
 	host  = flag.String("host", "0.0.0.0", "host")
 	debug = flag.Bool("debug", false, "debug")
 )
-
-func RunWeb(c *gin.Context) {
-
-	c.JSON(http.StatusOK, 123)
-}
 
 func Init() {
 	// 命令行参数解析
