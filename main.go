@@ -38,7 +38,7 @@ func CreateRoute() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
-	r.GET("/", RunWeb)
+	r.POST("/", RunWeb)
 	return r
 }
 
