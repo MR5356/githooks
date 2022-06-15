@@ -9,25 +9,43 @@ import (
 )
 
 var (
-	p = flag.Int("p", 8900, "port")
-	h = flag.String("h", "0.0.0.0", "host")
+	port  = flag.Int("port", 8900, "port")
+	host  = flag.String("host", "0.0.0.0", "host")
+	debug = flag.Bool("debug", false, "debug")
 )
 
 func RunWeb(c *gin.Context) {
 	c.JSON(http.StatusOK, "123")
 }
 
-func main() {
+func Init() {
+	// 命令行参数解析
 	flag.Parse()
+
+	// 命令行清空
 	utils.Clear()
-	fmt.Println(utils.GetExtFiles(utils.GetAbsPath(), ".exe"))
-	q := utils.RunCommand("ping 43.138.31.224")
-	fmt.Println(q)
-	fmt.Printf("Listening and serving HTTP on %s:%d\n", *h, *p)
-	gin.SetMode(gin.ReleaseMode)
+
+	// 初始化脚本
+	utils.LoadScripts()
+
+	// 输出程序端口信息
+	fmt.Printf("Listening and serving HTTP on %s:%d\n", *host, *port)
+}
+
+func CreateRoute() *gin.Engine {
+	if !*debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 	r.GET("/", RunWeb)
-	err := r.Run(fmt.Sprintf("%s:%d", *h, *p))
+	return r
+}
+
+func main() {
+	Init()
+
+	r := CreateRoute()
+	err := r.Run(fmt.Sprintf("%s:%d", *host, *port))
 	if err != nil {
 		panic(err)
 	}

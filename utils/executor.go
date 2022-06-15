@@ -6,9 +6,25 @@ import (
 	"github.com/axgle/mahonia"
 	"io"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"sync"
 )
+
+var (
+	Script = make(map[string]string, 0)
+)
+
+func LoadScripts() {
+	fmt.Println("脚本加载开始...")
+	files := GetExtFiles(GetAbsPath(), ".sh")
+	for _, file := range files {
+		filename := filepath.Base(file)
+		Script[filename] = file
+		fmt.Println(filename + ": " + file)
+	}
+	fmt.Println("脚本加载完毕")
+}
 
 func RunCommand(command string) []string {
 	res := make([]string, 0)
