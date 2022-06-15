@@ -26,9 +26,6 @@ func Init() {
 	// 命令行清空
 	utils.Clear()
 
-	// 初始化脚本
-	utils.LoadScripts()
-
 	// 输出程序端口信息
 	fmt.Printf("Listening and serving HTTP on %s:%d\n", *host, *port)
 }
