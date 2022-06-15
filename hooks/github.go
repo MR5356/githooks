@@ -9,10 +9,10 @@ import (
 )
 
 type GithubHookBody struct {
-	Depository struct {
+	Repository struct {
 		Name   string `json:"name"`
 		SSHUrl string `json:"ssh_url"`
-	} `json:"depository"`
+	} `json:"repository"`
 	HeadCommit struct {
 		Id string `json:"id"`
 	} `json:"head_commit"`
@@ -25,5 +25,6 @@ func HandleGithub(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(githubHookBody)
 	c.JSON(http.StatusOK, githubHookBody)
 }
