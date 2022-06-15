@@ -26,6 +26,7 @@ func HandleGithub(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	req, _ := json.Marshal(githubHookBody)
 	fmt.Printf("接收到新的githook：%s", string(req))
 
