@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -16,8 +16,12 @@ var (
 )
 
 func RunWeb(c *gin.Context) {
-	data, _ := ioutil.ReadAll(c.Request.Body)
-	fmt.Println(string(data))
+	json := make(map[string]interface{}) //注意该结构接受的内容
+	err := c.BindJSON(&json)
+	if err != nil {
+		fmt.Println(err)
+	}
+	log.Printf("%v", &json)
 	c.JSON(http.StatusOK, 123)
 }
 
