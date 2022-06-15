@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"githooks/hooks"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
@@ -16,13 +16,7 @@ var (
 )
 
 func RunWeb(c *gin.Context) {
-	json := make(map[string]interface{}) //注意该结构接受的内容
-	err := c.BindJSON(&json)
-	if err != nil {
-		fmt.Println(err)
-	}
 
-	log.Printf("%v", &json)
 	c.JSON(http.StatusOK, 123)
 }
 
@@ -42,7 +36,7 @@ func CreateRoute() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
-	r.POST("/", RunWeb)
+	r.POST("/", hooks.HandleGithub)
 	return r
 }
 
