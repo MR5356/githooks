@@ -109,7 +109,7 @@ func RunScript(scriptName string, args []string) []string {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Process PID: ", cmd.Process.Pid)
+	//fmt.Println("Process PID: ", cmd.Process.Pid)
 	err = cmd.Wait()
 	if err != nil {
 		fmt.Println(err)
