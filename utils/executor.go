@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"sync"
 )
 
@@ -67,7 +68,7 @@ func RunCommand(command string) []string {
 	return res
 }
 
-func RunScript(scriptName string) []string {
+func RunScript(scriptName string, args []string) []string {
 	// 执行脚本前加载脚本
 	LoadScripts()
 	var scriptPath string
@@ -76,6 +77,7 @@ func RunScript(scriptName string) []string {
 	} else {
 		fmt.Printf("%s 不存在", scriptName)
 	}
+	scriptPath = scriptPath + strings.Join(args, " ")
 	res := make([]string, 0)
 	enc := mahonia.NewDecoder("gbk")
 
