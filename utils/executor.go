@@ -68,6 +68,7 @@ func RunCommand(command string) []string {
 }
 
 func RunScript(scriptName string) []string {
+	// 执行脚本前加载脚本
 	LoadScripts()
 	var scriptPath string
 	if script, ok := Script[scriptName]; ok {
