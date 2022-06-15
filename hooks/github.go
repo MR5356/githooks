@@ -27,6 +27,7 @@ func HandleGithub(c *gin.Context) {
 		fmt.Println(err)
 	}
 	fmt.Println(githubHookBody)
+
 	utils.RunScript(fmt.Sprintf("docker.sh %s %s %s", githubHookBody.Repository.Name, githubHookBody.Repository.SSHUrl, githubHookBody.HeadCommit.Id[0:6]))
 	c.JSON(http.StatusOK, githubHookBody)
 }
