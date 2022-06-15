@@ -83,7 +83,7 @@ func RunScript(scriptName string, args []string) []string {
 	enc := mahonia.NewDecoder("gbk")
 
 	optSys := runtime.GOOS
-	cmd := exec.Command("bash", scriptPath)
+	cmd := exec.Command("bash -c ", scriptPath)
 	if optSys == "windows" {
 		panic("仅支持在linux中执行脚本")
 	}
