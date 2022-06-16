@@ -8,7 +8,7 @@ cd $name
 
 BUILD_FILE=release/docker/build.sh
 if [ -f "$BUILD_FILE" ]; then
-  /bin/bash $BUILD_FILE
+  /bin/bash $BUILD_FILE $commitId
 else
   docker build -t $name:$commitId -f release/docker/Dockerfile .
 fi
