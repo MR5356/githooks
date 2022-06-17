@@ -62,6 +62,8 @@ func main() {
 	Init()
 
 	r := CreateRoute()
+
+	// 保存PID
 	utils.RunCommand(fmt.Sprintf("echo %d > run.pid", os.Getpid()))
 	err := r.Run(fmt.Sprintf("%s:%d", *host, *port))
 	if err != nil {
