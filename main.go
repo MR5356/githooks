@@ -6,6 +6,9 @@ import (
 	"githooks/hooks"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
+	"io"
+	"log"
+	"os"
 )
 
 var (
@@ -21,8 +24,25 @@ func Init() {
 	// 命令行清空
 	utils.Clear()
 
-	// 输出程序端口信息
-	fmt.Printf("Listening and serving HTTP on %s:%d\n", *host, *port)
+	// 日志相关
+	logPath := "./logs"
+	_, err := os.Stat(logPath)
+	if os.IsNotExist(err) {
+		err := os.Mkdir(logPath, 0644)
+		if err != nil {
+			fmt.Println("日志目录创建失败")
+		}
+	}
+	logFile, err := os.OpenFile(logPath+"/githooks.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		fmt.Println("open log file failed, err:", err)
+		return
+	}
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetPrefix("[githooks] ")
+	log.SetOutput(mw)
+	gin.DefaultWriter = mw
+	log.SetFlags(log.Llongfile | log.Ltime | log.Ldate)
 }
 
 func CreateRoute() *gin.Engine {
@@ -32,6 +52,8 @@ func CreateRoute() *gin.Engine {
 	r := gin.Default()
 	r.POST("/", hooks.HandleGithub)
 	r.GET("/running", hooks.HandleGithubRunning)
+	// 输出程序端口信息
+	log.Printf("Listening and serving HTTP on %s:%d\n", *host, *port)
 	return r
 }
 

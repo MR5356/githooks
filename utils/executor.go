@@ -2,9 +2,11 @@ package utils
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"github.com/axgle/mahonia"
 	"io"
+	"log"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -27,27 +29,36 @@ type ScriptTask struct {
 
 func LoadScripts() {
 	Script = make(map[string]string, 0)
-	fmt.Println("脚本加载开始...")
+	log.Println("脚本加载开始...")
 	files := GetExtFiles(GetAbsPath(), ".sh")
 	for _, file := range files {
 		filename := filepath.Base(file)
 		Script[filename] = file
 		RunCommand(fmt.Sprintf("chmod +x %s", file))
-		fmt.Println(filename + ": " + file)
+		log.Println(filename + ": " + file)
 	}
-	fmt.Println("脚本加载完毕")
+	log.Println("脚本加载完毕")
 }
 
 func RunCommand(command string) []string {
 	res := make([]string, 0)
+
+	// 支持中文编码
 	enc := mahonia.NewDecoder("gbk")
 
+	// 判断运行系统
 	optSys := runtime.GOOS
 	cmd := exec.Command("cmd", "/c", command)
 	if optSys != "windows" {
 		cmd = exec.Command("bash", "-c", command)
 	}
+
+	// 标准输出与错误输出
+	var stderr = bytes.Buffer{}
 	stdout, _ := cmd.StdoutPipe()
+	cmd.Stderr = &stderr
+
+	// 日志处理
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -58,21 +69,23 @@ func RunCommand(command string) []string {
 			if err != nil || err == io.EOF {
 				return
 			}
-			fmt.Print(enc.ConvertString(readString))
+			log.Print(enc.ConvertString(readString))
 			res = append(res, enc.ConvertString(readString))
 		}
 	}()
 
+	// 流程处理
 	err := cmd.Start()
+	log.Printf("PID: %d command: %s", cmd.Process.Pid, command)
+
 	wg.Wait()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
-	fmt.Println("Process PID: ", cmd.Process.Pid)
 	err = cmd.Wait()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(enc.ConvertString(stderr.String()))
 	}
 
 	return res
@@ -85,7 +98,7 @@ func RunScript(scriptName string, args []string) []string {
 	if script, ok := Script[scriptName]; ok {
 		scriptPath = script
 	} else {
-		fmt.Printf("%s 不存在", scriptName)
+		log.Printf("%s 不存在", scriptName)
 	}
 
 	scriptPath = scriptPath + " " + strings.Join(args, " ")
@@ -102,6 +115,9 @@ func RunScript(scriptName string, args []string) []string {
 	ScriptTasks[args[0]+":"+args[2]] = ScriptTask{args[0], time.Now().Unix(), 0, scriptPath}
 
 	stdout, _ := cmd.StdoutPipe()
+	var stderr = bytes.Buffer{}
+	cmd.Stderr = &stderr
+
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -112,22 +128,23 @@ func RunScript(scriptName string, args []string) []string {
 			if err != nil || err == io.EOF {
 				return
 			}
-			fmt.Print(enc.ConvertString(readString))
+			log.Print(enc.ConvertString(readString))
 			res = append(res, enc.ConvertString(readString))
 		}
 	}()
 
 	err := cmd.Start()
+	log.Printf("PID: %d command: %s", cmd.Process.Pid, scriptPath)
 	wg.Wait()
 	if err != nil {
 		delete(ScriptTasks, args[0]+":"+args[2])
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	err = cmd.Wait()
 	if err != nil {
 		delete(ScriptTasks, args[0]+":"+args[2])
-		fmt.Println(err)
+		log.Println(enc.ConvertString(stderr.String()))
 	}
 	delete(ScriptTasks, args[0]+":"+args[2])
 	return res

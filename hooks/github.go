@@ -2,10 +2,10 @@ package hooks
 
 import (
 	"encoding/json"
-	"fmt"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -24,11 +24,11 @@ func HandleGithub(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	err := json.Unmarshal(data, &githubHookBody)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	req, _ := json.Marshal(githubHookBody)
-	fmt.Printf("接收到新的githook：%s\n", string(req))
+	log.Printf("接收到新的githook：%s\n", string(req))
 
 	go utils.RunScript("docker.sh", []string{githubHookBody.Repository.Name, githubHookBody.Repository.SSHUrl, githubHookBody.HeadCommit.Id[0:6]})
 	c.JSON(http.StatusOK, githubHookBody)
