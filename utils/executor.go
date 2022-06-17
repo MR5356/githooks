@@ -3,7 +3,6 @@ package utils
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"github.com/axgle/mahonia"
 	"io"
 	"log"
@@ -34,7 +33,7 @@ func LoadScripts() {
 	for _, file := range files {
 		filename := filepath.Base(file)
 		Script[filename] = file
-		RunCommand(fmt.Sprintf("chmod +x %s", file))
+		// RunCommand(fmt.Sprintf("chmod +x %s", file))
 		log.Println(filename + ": " + file)
 	}
 	log.Println("脚本加载完毕")
