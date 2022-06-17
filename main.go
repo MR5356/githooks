@@ -53,7 +53,7 @@ func CreateRoute() *gin.Engine {
 	r.POST("/", hooks.HandleGithub)
 	r.GET("/running", hooks.HandleGithubRunning)
 	// 输出程序端口信息
-	log.Printf("Listening and serving HTTP on %s:%d\n", *host, *port)
+	log.Printf("Listening and serving HTTP on %s:%d\n with PID %d", *host, *port, os.Getpid())
 	return r
 }
 
