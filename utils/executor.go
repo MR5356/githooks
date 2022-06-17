@@ -137,13 +137,11 @@ func RunScript(scriptName string, args []string) []string {
 	log.Printf("PID: %d command: %s", cmd.Process.Pid, scriptPath)
 	wg.Wait()
 	if err != nil {
-		delete(ScriptTasks, args[0]+":"+args[2])
 		log.Println(err)
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		delete(ScriptTasks, args[0]+":"+args[2])
 		log.Println(enc.ConvertString(stderr.String()))
 	}
 	delete(ScriptTasks, args[0]+":"+args[2])
