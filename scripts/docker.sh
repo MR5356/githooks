@@ -13,5 +13,7 @@ else
   docker build -t $name:$commitId -f release/docker/Dockerfile .
 fi
 
+docker rmi `docker images|grep none|awk '{print $3 }'|xargs`
+
 cd -
 rm -rf /tmp/$name
