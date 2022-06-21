@@ -10,7 +10,7 @@ help:
 all: build release release-windows
 
 build: deps ## Build the project
-	go build
+	go build -ldflags "-s -w"
 
 release: clean deps ## Generate releases for unix systems
 	@for arch in $(ARCHS);\
@@ -19,7 +19,7 @@ release: clean deps ## Generate releases for unix systems
 		do \
 			echo "Building $$os-$$arch"; \
 			mkdir -p build/githooks-$$os-$$arch/; \
-			GOOS=$$os GOARCH=$$arch go build -o build/githooks-$$os-$$arch/githooks; \
+			GOOS=$$os GOARCH=$$arch go build -ldflags "-s -w" -o build/githooks-$$os-$$arch/githooks; \
 			tar cz -C build -f build/githooks-$$os-$$arch.tar.gz githooks-$$os-$$arch; \
 		done \
 	done
@@ -29,7 +29,7 @@ release-windows: clean deps ## Generate release for windows
 	do \
 		echo "Building windows-$$arch"; \
 		mkdir -p build/githooks-windows-$$arch/; \
-		GOOS=windows GOARCH=$$arch go build -o build/githooks-windows-$$arch/githooks.exe; \
+		GOOS=windows GOARCH=$$arch go build -ldflags "-s -w" -o build/githooks-windows-$$arch/githooks.exe; \
 		tar cz -C build -f build/githooks-windows-$$arch.tar.gz githooks-windows-$$arch; \
 	done
 
