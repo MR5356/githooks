@@ -17,6 +17,6 @@ func HandleGitlab(c *gin.Context) {
 
 	switch payload.(type) {
 	case gitlab.PushEventPayload:
-		log.Println("123")
+		log.Println(payload)
 	}
 }
