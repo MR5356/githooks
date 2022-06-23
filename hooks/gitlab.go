@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"encoding/json"
 	"githooks/config"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/webhooks/v6/gitlab"
@@ -17,6 +18,7 @@ func HandleGitlab(c *gin.Context) {
 
 	switch payload.(type) {
 	case gitlab.PushEventPayload:
-		log.Printf("new gitlab hook: %+v", payload)
+		payloadJson, _ := json.Marshal(payload)
+		log.Printf("new gitlab hook: %+v", payloadJson)
 	}
 }
