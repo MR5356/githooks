@@ -50,9 +50,7 @@ func CreateRoute() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
-	r.POST("/", hooks.HandleGithub)
-	r.GET("/running", hooks.HandleGithubRunning)
-
+	r.POST("/github", hooks.HandleGithub)
 	r.POST("/gitlab", hooks.HandleGitlab)
 	// 输出程序端口信息
 	log.Printf("Listening and serving HTTP on %s:%d with PID %d", *host, *port, os.Getpid())
