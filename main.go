@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -52,6 +53,10 @@ func CreateRoute() *gin.Engine {
 	r := gin.Default()
 	r.POST("/github", hooks.HandleGithub)
 	r.POST("/gitlab", hooks.HandleGitlab)
+	r.GET("/running", func(c *gin.Context) {
+		c.JSON(http.StatusOK, utils.ScriptTasks)
+	})
+
 	// 输出程序端口信息
 	log.Printf("Listening and serving HTTP on %s:%d with PID %d", *host, *port, os.Getpid())
 	return r
