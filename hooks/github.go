@@ -2,38 +2,30 @@ package hooks
 
 import (
 	"encoding/json"
+	"githooks/config"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"github.com/go-playground/webhooks/v6/github"
 	"log"
 	"net/http"
 )
 
-type GithubHookBody struct {
-	Repository struct {
-		Name   string `json:"name"`
-		SSHUrl string `json:"ssh_url"`
-	} `json:"repository"`
-	HeadCommit struct {
-		Id string `json:"id"`
-	} `json:"head_commit"`
-}
-
 func HandleGithub(c *gin.Context) {
-	githubHookBody := GithubHookBody{}
-	data, _ := ioutil.ReadAll(c.Request.Body)
-	err := json.Unmarshal(data, &githubHookBody)
+	hook, _ := github.New(github.Options.Secret(config.Secret))
+
+	payload, err := hook.Parse(c.Request, github.PushEvent)
 	if err != nil {
 		log.Println(err)
 	}
 
-	req, _ := json.Marshal(githubHookBody)
-	log.Printf("接收到新的githook：%s\n", string(req))
+	payloadJson, _ := json.Marshal(payload)
+	log.Printf("new github hook: %+v", string(payloadJson))
 
-	go utils.RunScript("docker.sh", []string{githubHookBody.Repository.Name, githubHookBody.Repository.SSHUrl, githubHookBody.HeadCommit.Id[0:6]})
-	c.JSON(http.StatusOK, githubHookBody)
-}
+	switch payload.(type) {
+	case github.PushPayload:
+		pl := payload.(github.PushPayload)
+		go utils.RunScript("docker.sh", []string{pl.Repository.Name, pl.Repository.SSHURL, pl.After[0:6]})
+	}
 
-func HandleGithubRunning(c *gin.Context) {
-	c.JSON(http.StatusOK, utils.ScriptTasks)
+	c.JSON(http.StatusOK, payload)
 }

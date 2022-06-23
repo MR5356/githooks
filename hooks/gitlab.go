@@ -25,6 +25,7 @@ func HandleGitlab(c *gin.Context) {
 	case gitlab.PushEventPayload:
 		pl := payload.(gitlab.PushEventPayload)
 		go utils.RunScript("docker.sh", []string{pl.Project.Name, pl.Project.GitSSHURL, pl.After[0:6]})
-		c.JSON(http.StatusOK, pl)
 	}
+
+	c.JSON(http.StatusOK, payload)
 }
