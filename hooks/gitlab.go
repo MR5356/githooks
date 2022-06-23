@@ -19,6 +19,6 @@ func HandleGitlab(c *gin.Context) {
 	switch payload.(type) {
 	case gitlab.PushEventPayload:
 		payloadJson, _ := json.Marshal(payload)
-		log.Printf("new gitlab hook: %+v", payloadJson)
+		log.Printf("new gitlab hook: %+v", string(payloadJson))
 	}
 }
