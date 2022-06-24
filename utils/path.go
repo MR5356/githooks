@@ -44,3 +44,12 @@ func ScanDir(path string) []string {
 	}
 	return files
 }
+
+func IsExist(filepath string) bool {
+	_, err := os.Stat(filepath)
+	if os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
+}

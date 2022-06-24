@@ -40,7 +40,7 @@ func LoadScripts() {
 	log.Println("脚本加载完毕")
 }
 
-func RunCommand(command string) []string {
+func RunCommand(command string) bool {
 	res := make([]string, 0)
 
 	// 支持中文编码
@@ -86,9 +86,10 @@ func RunCommand(command string) []string {
 	err = cmd.Wait()
 	if err != nil {
 		log.Println(enc.ConvertString(stderr.String()))
+		return false
 	}
 
-	return res
+	return true
 }
 
 func RunScript(scriptName string, args []string) []string {
