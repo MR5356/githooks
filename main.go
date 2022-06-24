@@ -66,6 +66,7 @@ func main() {
 	// 初始化操作
 	Init()
 
+	//初始化路由
 	r := CreateRoute()
 
 	// 保存PID
