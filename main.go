@@ -22,9 +22,6 @@ func Init() {
 	// 命令行参数解析
 	flag.Parse()
 
-	// 命令行清空
-	utils.Clear()
-
 	// 日志相关
 	logPath := "./logs"
 	_, err := os.Stat(logPath)

@@ -33,8 +33,6 @@ func HandleGithub(c *gin.Context) {
 		builder.CommitId = pl.After[0:6]
 		builder.UserName = pl.Pusher.Name
 		go builder.Run()
-
-		//go utils.RunScript("docker.sh", []string{pl.Repository.Name, pl.Repository.SSHURL, pl.After[0:6]})
 	}
 
 	c.JSON(http.StatusOK, payload)

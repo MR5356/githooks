@@ -33,8 +33,6 @@ func HandleGitlab(c *gin.Context) {
 		builder.CommitId = pl.After[0:6]
 		builder.UserName = pl.UserName
 		go builder.Run()
-
-		//go utils.RunScript("docker.sh", []string{pl.Project.Name, pl.Project.GitSSHURL, pl.After[0:6]})
 	}
 
 	c.JSON(http.StatusOK, payload)
