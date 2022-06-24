@@ -13,14 +13,14 @@ const (
 )
 
 var (
-	BuildTasks = BuildTaskQueue{make([]Build, 0)}
+	BuildTasks = BuildTaskQueue{make([]*Build, 0)}
 )
 
 type BuildTaskQueue struct {
-	Queue []Build `json:"queue"`
+	Queue []*Build `json:"queue"`
 }
 
-func (q *BuildTaskQueue) Enqueue(b Build) {
+func (q *BuildTaskQueue) Enqueue(b *Build) {
 	q.Queue = append(q.Queue, b)
 	for {
 		if q.Size() < 100 || (q.Queue[0].Success && q.Queue[0].StepCurrent != q.Queue[0].StepTotal) {
@@ -65,7 +65,7 @@ func (b *Build) failedPrint() {
 	log.Printf("build Runner Step %d/%d Build info: %+v", b.StepCurrent, b.StepTotal, b)
 }
 
-func (b Build) Run() {
+func (b *Build) Run() {
 	BuildTasks.Enqueue(b)
 	var (
 		gitClone = fmt.Sprintf("cd %s && git clone %s", buildPath, b.SshUrl)
