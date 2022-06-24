@@ -12,6 +12,28 @@ const (
 	dockerfile = "release/docker/Dockerfile"
 )
 
+var (
+	BuildTasks = BuildTaskQueue{make([]Build, 0)}
+)
+
+type BuildTaskQueue struct {
+	queue []Build
+}
+
+func (q *BuildTaskQueue) Enqueue(b Build) {
+	q.queue = append(q.queue, b)
+	for {
+		if q.Size() < 100 || (q.queue[0].Success && q.queue[0].StepCurrent != q.queue[0].StepTotal) {
+			break
+		}
+		q.queue = q.queue[1:]
+	}
+}
+
+func (q *BuildTaskQueue) Size() int {
+	return len(q.queue)
+}
+
 type Build struct {
 	Name        string `json:"name"`
 	From        string `json:"from"`
@@ -44,6 +66,7 @@ func (b *Build) failedPrint() {
 }
 
 func (b *Build) Run() {
+	BuildTasks.Enqueue(*b)
 	var (
 		gitClone = fmt.Sprintf("cd %s && git clone %s", buildPath, b.SshUrl)
 		buildF   = fmt.Sprintf("%s/%s/%s", buildPath, b.Name, buildFile)

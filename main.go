@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"githooks/hooks"
+	"githooks/runner"
 	"githooks/utils"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -51,7 +52,7 @@ func CreateRoute() *gin.Engine {
 	r.POST("/github", hooks.HandleGithub)
 	r.POST("/gitlab", hooks.HandleGitlab)
 	r.GET("/running", func(c *gin.Context) {
-		c.JSON(http.StatusOK, utils.ScriptTasks)
+		c.JSON(http.StatusOK, runner.BuildTasks)
 	})
 
 	// 输出程序端口信息
