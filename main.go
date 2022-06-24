@@ -52,7 +52,7 @@ func CreateRoute() *gin.Engine {
 	r.POST("/github", hooks.HandleGithub)
 	r.POST("/gitlab", hooks.HandleGitlab)
 	r.GET("/running", func(c *gin.Context) {
-		c.JSON(http.StatusOK, runner.BuildTasks)
+		c.JSON(http.StatusOK, runner.BuildTasks.Queue)
 	})
 
 	// 输出程序端口信息
