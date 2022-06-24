@@ -28,6 +28,10 @@ func HandleGitlab(c *gin.Context) {
 		builder := runner.NewDefaultBuild()
 		builder.Name = pl.Project.Name
 		builder.From = "Gitlab"
+		builder.SshUrl = pl.Project.GitSSHURL
+		builder.HttpUrl = pl.Project.GitHTTPURL
+		builder.CommitId = pl.After[0:6]
+		builder.UserName = pl.UserName
 		go builder.Run()
 
 		//go utils.RunScript("docker.sh", []string{pl.Project.Name, pl.Project.GitSSHURL, pl.After[0:6]})
