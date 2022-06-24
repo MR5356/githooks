@@ -52,7 +52,7 @@ func (b *Build) Run() {
 		buildCommand        = fmt.Sprintf("cd %s/%s && /bin/bash %s %s", buildPath, b.Name, buildFile, b.CommitId)
 		defaultBuildCommand = fmt.Sprintf("cd %s/%s && docker build -t %s:%s -f %s .", buildPath, b.Name, b.Name, b.CommitId, dockerfile)
 
-		cleanNoneTagImagesCommand = fmt.Sprintf("docker rmi `docker images|grep none|awk '{print $3 }'|xargs`")
+		cleanNoneTagImagesCommand = fmt.Sprintf("docker rmi `docker images|grep none|awk '{print $3 }'|xargs` || echo none")
 		cleanBuildPathCommand     = fmt.Sprintf("rm -rf %s/%s", buildPath, b.Name)
 	)
 

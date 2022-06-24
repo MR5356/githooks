@@ -3,7 +3,7 @@ package hooks
 import (
 	"encoding/json"
 	"githooks/config"
-	"githooks/utils"
+	"githooks/runner"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/webhooks/v6/gitlab"
 	"log"
@@ -24,7 +24,13 @@ func HandleGitlab(c *gin.Context) {
 	switch payload.(type) {
 	case gitlab.PushEventPayload:
 		pl := payload.(gitlab.PushEventPayload)
-		go utils.RunScript("docker.sh", []string{pl.Project.Name, pl.Project.GitSSHURL, pl.After[0:6]})
+
+		builder := runner.NewDefaultBuild()
+		builder.Name = pl.Project.Name
+		builder.From = "Gitlab"
+		go builder.Run()
+
+		//go utils.RunScript("docker.sh", []string{pl.Project.Name, pl.Project.GitSSHURL, pl.After[0:6]})
 	}
 
 	c.JSON(http.StatusOK, payload)
