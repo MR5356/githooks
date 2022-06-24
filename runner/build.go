@@ -34,13 +34,13 @@ func NewDefaultBuild() Build {
 
 func (b *Build) stepPrint(message string) {
 	b.StepCurrent = b.StepCurrent + 1
-	log.Printf("Step %d/%d: %s", b.StepCurrent, b.StepTotal, message)
+	log.Printf("build Runner Step %d/%d: %s", b.StepCurrent, b.StepTotal, message)
 }
 
 func (b *Build) failedPrint() {
 	b.Success = false
-	log.Printf("Step %d/%d: Build %s failed", b.StepCurrent, b.StepTotal, b.Name)
-	log.Printf("Step %d/%d Build info: %+v", b.StepCurrent, b.StepTotal, b)
+	log.Printf("build Runner Step %d/%d: Build %s failed", b.StepCurrent, b.StepTotal, b.Name)
+	log.Printf("build Runner Step %d/%d Build info: %+v", b.StepCurrent, b.StepTotal, b)
 }
 
 func (b *Build) Run() {
