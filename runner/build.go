@@ -10,6 +10,10 @@ const (
 	buildPath  = "/tmp"
 	buildFile  = "release/docker/build.sh"
 	dockerfile = "release/docker/Dockerfile"
+
+	StatusRunning  = "running"
+	StatusFinished = "finished"
+	StatusFailed   = "failed"
 )
 
 var (
@@ -23,7 +27,7 @@ type BuildTaskQueue struct {
 func (q *BuildTaskQueue) Enqueue(b *Build) {
 	q.Queue = append(q.Queue, b)
 	for {
-		if q.Size() < 100 || (q.Queue[0].Success && q.Queue[0].StepCurrent != q.Queue[0].StepTotal) {
+		if q.Size() < 100 || (q.Queue[0].Status == StatusRunning) {
 			break
 		}
 		q.Queue = q.Queue[1:]
@@ -43,14 +47,14 @@ type Build struct {
 	UserName    string `json:"userName"`
 	StepCurrent int    `json:"stepCurrent"`
 	StepTotal   int    `json:"stepTotal"`
-	Success     bool   `json:"success"`
+	Status      string `json:"status"`
 }
 
 func NewDefaultBuild() Build {
 	return Build{
 		StepTotal:   11,
 		StepCurrent: 0,
-		Success:     true,
+		Status:      StatusRunning,
 	}
 }
 
@@ -60,7 +64,7 @@ func (b *Build) stepPrint(message string) {
 }
 
 func (b *Build) failedPrint() {
-	b.Success = false
+	b.Status = StatusFailed
 	log.Printf("build Runner Step %d/%d: Build %s failed", b.StepCurrent, b.StepTotal, b.Name)
 	log.Printf("build Runner Step %d/%d Build info: %+v", b.StepCurrent, b.StepTotal, b)
 }
@@ -138,4 +142,5 @@ func (b *Build) Run() {
 
 	//构建完成
 	b.stepPrint(fmt.Sprintf("Build %s finished", b.Name))
+	b.Status = StatusFinished
 }
