@@ -26,7 +26,7 @@ type Build struct {
 
 func NewDefaultBuild() Build {
 	return Build{
-		StepTotal:   10,
+		StepTotal:   11,
 		StepCurrent: 0,
 		Success:     true,
 	}
@@ -55,6 +55,13 @@ func (b *Build) Run() {
 		cleanNoneTagImagesCommand = fmt.Sprintf("docker rmi `docker images|grep none|awk '{print $3 }'|xargs`")
 		cleanBuildPathCommand     = fmt.Sprintf("rm -rf %s/%s", buildPath, b.Name)
 	)
+
+	//执行预清理
+	b.stepPrint(fmt.Sprintf("clean build path"))
+	if !utils.RunCommand(cleanBuildPathCommand) {
+		b.failedPrint()
+		return
+	}
 
 	//克隆仓库
 	b.stepPrint(fmt.Sprintf("Clone %s", b.SshUrl))
