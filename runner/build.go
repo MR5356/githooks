@@ -65,8 +65,8 @@ func (b *Build) failedPrint() {
 	log.Printf("build Runner Step %d/%d Build info: %+v", b.StepCurrent, b.StepTotal, b)
 }
 
-func (b *Build) Run() {
-	BuildTasks.Enqueue(*b)
+func (b Build) Run() {
+	BuildTasks.Enqueue(b)
 	var (
 		gitClone = fmt.Sprintf("cd %s && git clone %s", buildPath, b.SshUrl)
 		buildF   = fmt.Sprintf("%s/%s/%s", buildPath, b.Name, buildFile)
