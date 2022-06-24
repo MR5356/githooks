@@ -61,7 +61,7 @@ func CreateRoute() *gin.Engine {
 }
 
 func main() {
-	// 初始化
+	// 初始化操作
 	Init()
 
 	//初始化路由
