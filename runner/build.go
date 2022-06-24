@@ -17,21 +17,21 @@ var (
 )
 
 type BuildTaskQueue struct {
-	queue []Build
+	Queue []Build `json:"queue"`
 }
 
 func (q *BuildTaskQueue) Enqueue(b Build) {
-	q.queue = append(q.queue, b)
+	q.Queue = append(q.Queue, b)
 	for {
-		if q.Size() < 100 || (q.queue[0].Success && q.queue[0].StepCurrent != q.queue[0].StepTotal) {
+		if q.Size() < 100 || (q.Queue[0].Success && q.Queue[0].StepCurrent != q.Queue[0].StepTotal) {
 			break
 		}
-		q.queue = q.queue[1:]
+		q.Queue = q.Queue[1:]
 	}
 }
 
 func (q *BuildTaskQueue) Size() int {
-	return len(q.queue)
+	return len(q.Queue)
 }
 
 type Build struct {
